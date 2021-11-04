@@ -68,9 +68,9 @@ public class Controlador implements Initializable {
 	public void initialize(URL location, ResourceBundle resources) {
 		model.servidorProperty().bindBidirectional(servernametext.textProperty());
 		model.puertoProperty().bindBidirectional(puertotext.textProperty());
-		model.emailremitenteProperty().bindBidirectional(emailfromtext.textProperty());
+		model.emailremitenteProperty().bindBidirectional(emailtotext.textProperty());
 		model.contrasenaProperty().bindBidirectional(contrasenatext.textProperty());
-		model.emaildestinatarioProperty().bindBidirectional(emailtotext.textProperty());
+		model.emaildestinatarioProperty().bindBidirectional(emailfromtext.textProperty());
 		model.asuntoProperty().bindBidirectional(asuntotext.textProperty());
 		model.mensajeProperty().bindBidirectional(mensajearea.textProperty());
 		sslcheck.selectedProperty().bindBidirectional(model.checkboxProperty());
