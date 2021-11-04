@@ -1,4 +1,4 @@
-package email;
+package dad.email;
 
 public class Main {
 

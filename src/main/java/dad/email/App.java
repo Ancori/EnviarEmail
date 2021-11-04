@@ -1,4 +1,4 @@
-package email;
+package dad.email;
 
 import javafx.application.Application;
 import javafx.scene.Scene;

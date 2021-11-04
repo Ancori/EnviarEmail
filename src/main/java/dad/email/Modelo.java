@@ -1,4 +1,4 @@
-package email;
+package dad.email;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
