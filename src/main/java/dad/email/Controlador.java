@@ -8,6 +8,7 @@ import org.apache.commons.mail.DefaultAuthenticator;
 import org.apache.commons.mail.Email;
 import org.apache.commons.mail.SimpleEmail;
 
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -22,7 +23,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.GridPane;
 
 public class Controlador implements Initializable {
-	Modelo model=new Modelo();
+	Modelo model = new Modelo();
 	@FXML
 	private GridPane view;
 
@@ -74,7 +75,6 @@ public class Controlador implements Initializable {
 		model.asuntoProperty().bindBidirectional(asuntotext.textProperty());
 		model.mensajeProperty().bindBidirectional(mensajearea.textProperty());
 		sslcheck.selectedProperty().bindBidirectional(model.checkboxProperty());
-		
 
 	}
 
@@ -84,47 +84,55 @@ public class Controlador implements Initializable {
 	}
 
 	@FXML
-	void onenviar(ActionEvent event){
-		try {
-			Email email = new SimpleEmail();
-			email.setHostName(model.getServidor());
-			int port=Integer.valueOf(model.getPuerto());
-			email.setSmtpPort(port);
-			email.setAuthenticator(new DefaultAuthenticator(model.getEmailremitente(), model.getContrasena()));
-			if(model.isCheckbox()) {
-				email.setSSLOnConnect(true);
-			}else {
-				email.setSSLOnConnect(false);
-			}
-			email.setFrom(model.getEmaildestinatario());
-			email.setSubject(model.getAsunto());
-			email.setMsg(model.getMensaje());
-			email.addTo(model.getEmaildestinatario());
-			email.send();
-			Alert alert = new Alert(AlertType.INFORMATION);
-			alert.setTitle("Mensaje enviado");
-			alert.setHeaderText("Mensaje enviado con exito a "+model.getEmaildestinatario());
-			alert.showAndWait();
-		} catch ( Exception e) {
-			Alert alert = new Alert(AlertType.ERROR);
-			alert.setTitle("Error");
-			alert.setHeaderText("No se pudo enviar el email");
-			alert.setContentText("Invalid message supplied");
-			alert.showAndWait();
-		}
+	void onenviar(ActionEvent event) {
+		Task<Void> task = new Task<Void>() {
+			@Override
+			public Void call() {
 
+				try {
+					Email email = new SimpleEmail();
+					email.setHostName(model.getServidor());
+					int port = Integer.valueOf(model.getPuerto());
+					email.setSmtpPort(port);
+					email.setAuthenticator(new DefaultAuthenticator(model.getEmailremitente(), model.getContrasena()));
+					if (model.isCheckbox()) {
+						email.setSSLOnConnect(true);
+					} else {
+						email.setSSLOnConnect(false);
+					}
+					email.setFrom(model.getEmaildestinatario());
+					email.setSubject(model.getAsunto());
+					email.setMsg(model.getMensaje());
+					email.addTo(model.getEmaildestinatario());
+					email.send();
+					Alert alert = new Alert(AlertType.INFORMATION);
+					alert.setTitle("Mensaje enviado");
+					alert.setHeaderText("Mensaje enviado con exito a " + model.getEmaildestinatario());
+					alert.showAndWait();
+				} catch (Exception e) {
+					Alert alert = new Alert(AlertType.ERROR);
+					alert.setTitle("Error");
+					alert.setHeaderText("No se pudo enviar el email");
+					alert.setContentText("Invalid message supplied");
+					alert.showAndWait();
+				}
+				return null;
+			}
+		};
+
+		new Thread(task).start();
 	}
 
 	@FXML
 	void onvaciar(ActionEvent event) {
-     model.setServidor(null);
-     model.setPuerto(null);
-     model.setCheckbox(false);
-     model.setEmailremitente(null);
-     model.setContrasena(null);
-     model.setEmaildestinatario(null);
-     model.setAsunto(null);
-     model.setMensaje(null);
+		model.setServidor(null);
+		model.setPuerto(null);
+		model.setCheckbox(false);
+		model.setEmailremitente(null);
+		model.setContrasena(null);
+		model.setEmaildestinatario(null);
+		model.setAsunto(null);
+		model.setMensaje(null);
 	}
 
 	public GridPane getView() {
