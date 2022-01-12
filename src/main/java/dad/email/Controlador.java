@@ -85,10 +85,9 @@ public class Controlador implements Initializable {
 
 	@FXML
 	void onenviar(ActionEvent event) {
-		Task<Void> task = new Task<Void>() {
+		Task<Void> tarea = new Task<Void>() {
 			@Override
 			public Void call() {
-
 				try {
 					Email email = new SimpleEmail();
 					email.setHostName(model.getServidor());
@@ -105,22 +104,28 @@ public class Controlador implements Initializable {
 					email.setMsg(model.getMensaje());
 					email.addTo(model.getEmaildestinatario());
 					email.send();
-					Alert alert = new Alert(AlertType.INFORMATION);
-					alert.setTitle("Mensaje enviado");
-					alert.setHeaderText("Mensaje enviado con exito a " + model.getEmaildestinatario());
-					alert.showAndWait();
+
 				} catch (Exception e) {
-					Alert alert = new Alert(AlertType.ERROR);
-					alert.setTitle("Error");
-					alert.setHeaderText("No se pudo enviar el email");
-					alert.setContentText("Invalid message supplied");
-					alert.showAndWait();
+
 				}
 				return null;
 			}
 		};
+		tarea.setOnSucceeded(e -> {
+			Alert alert = new Alert(AlertType.INFORMATION);
+			alert.setTitle("Mensaje enviado");
+			alert.setHeaderText("Mensaje enviado con exito a " + model.getEmaildestinatario());
+			alert.showAndWait();
+		});
+		tarea.setOnFailed(e -> {
+			Alert alert = new Alert(AlertType.ERROR);
+			alert.setTitle("Error");
+			alert.setHeaderText("No se pudo enviar el email");
+			alert.setContentText("Invalid message supplied");
+			alert.showAndWait();
 
-		new Thread(task).start();
+		});
+		new Thread(tarea).start();
 	}
 
 	@FXML
